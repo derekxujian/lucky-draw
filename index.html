@@ -7,22 +7,18 @@
   <meta name="format-detection" content="telephone=no">
   <title>幸运抽奖</title>
   <style>
-    :root{--bg:#f3f7ff;--card:#ffffff;--text:#172033;--muted:#667085;--blue:#1f74ff;--green:#12b76a;--red:#f04438;--line:#d9e2f2;--shadow:0 16px 40px rgba(31,116,255,.16)}
+    :root{--bg:#f4f7ff;--card:#fff;--text:#172033;--muted:#667085;--blue:#1f74ff;--green:#12b76a;--red:#f04438;--orange:#f79009;--line:#d9e2f2;--shadow:0 16px 38px rgba(31,116,255,.14)}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:linear-gradient(180deg,#ffffff,var(--bg));color:var(--text)}
-    body{padding:18px 14px 28px;display:flex;justify-content:center}.app{width:100%;max-width:480px}
-    h1{text-align:center;font-size:40px;line-height:1;margin:16px 0 10px;letter-spacing:-1px}.sub{text-align:center;color:var(--muted);font-size:15px;line-height:1.45;margin:0 10px 16px}
-    .card,.box{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:18px;margin-bottom:14px}
-    .ball{width:min(70vw,270px);height:min(70vw,270px);border-radius:50%;margin:6px auto 18px;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;background:radial-gradient(circle at 35% 25%,#fff 0,#f8fbff 35%,#dfeaff 100%);box-shadow:inset 0 0 28px rgba(255,255,255,.8),0 12px 36px rgba(31,116,255,.18)}
+    html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:linear-gradient(180deg,#fff,var(--bg));color:var(--text)}
+    body{padding:18px 14px 30px;display:flex;justify-content:center}.app{width:100%;max-width:520px}
+    h1{text-align:center;font-size:38px;line-height:1;margin:16px 0 10px;letter-spacing:-1px}.sub{text-align:center;color:var(--muted);font-size:15px;line-height:1.45;margin:0 8px 16px}
+    .card,.box{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:18px;margin-bottom:14px}.box.flat{box-shadow:none}
+    .ball{width:min(70vw,265px);height:min(70vw,265px);border-radius:50%;margin:6px auto 18px;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background:radial-gradient(circle at 35% 25%,#fff 0,#f8fbff 35%,#dfeaff 100%);box-shadow:inset 0 0 28px rgba(255,255,255,.8),0 12px 34px rgba(31,116,255,.18)}
     .ball.spin{animation:pulse .7s ease-in-out infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
     .status{display:inline-block;border-radius:999px;padding:7px 13px;background:#98a2b3;color:white;font-weight:800;font-size:14px;margin-bottom:12px}.status.ok{background:var(--green)}
-    .prize{font-size:25px;line-height:1.18;font-weight:900}.hint{font-size:13px;color:var(--muted);line-height:1.4;margin-top:9px}
-    label{display:block;font-size:14px;font-weight:900;margin:8px 0 7px}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:16px;background:#fff;font:inherit;font-size:17px;color:var(--text);padding:0 14px;outline:none;-webkit-appearance:none;appearance:none}input,select{height:54px}textarea{min-height:124px;padding:12px 14px;line-height:1.45;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,116,255,.12)}
-    button{width:100%;border:0;border-radius:18px;min-height:56px;font-family:inherit;font-size:19px;font-weight:900;background:var(--blue);color:#fff;-webkit-appearance:none;appearance:none;cursor:pointer;touch-action:manipulation}button:active{transform:scale(.985)}button:disabled{opacity:.55}.secondary{background:#eef3fb;color:var(--text);font-size:16px;min-height:48px}.danger{background:var(--red);font-size:16px;min-height:48px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:.8fr 1.4fr .8fr;gap:8px;align-items:end}.small{font-size:15px;min-height:44px}.copyArea{position:absolute;left:-9999px;top:-9999px}
-    .title{font-size:16px;font-weight:900;margin-bottom:9px}.pill{background:#f2f6ff;border-radius:14px;padding:9px 11px;margin-top:8px;font-size:14px}.note{font-size:12px;color:var(--muted);line-height:1.45;margin:7px 0}.history{font-size:14px;line-height:1.75;color:var(--muted)}
-    #adminPanel,#adminArea,#historyBox{display:none}#adminPanel.show,#adminArea.show,#historyBox.show{display:block}.okText{color:var(--green);font-weight:900}.badText{color:var(--red);font-weight:900}.adminStatus{font-size:13px;color:var(--muted);line-height:1.5;margin-top:6px}.divider{height:1px;background:var(--line);margin:14px 0}.miniTitle{font-size:14px;font-weight:900;margin:12px 0 6px;color:var(--text)}
-    .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:99}.confetti i{position:absolute;top:-20px;width:8px;height:14px;border-radius:3px;animation:fall 1.4s ease-in forwards}@keyframes fall{to{transform:translate3d(var(--x),105vh,0) rotate(560deg);opacity:0}}
-    @media (max-width:420px){.row3{grid-template-columns:1fr}.row{grid-template-columns:1fr}h1{font-size:36px}}
+    .prize{font-size:25px;line-height:1.18;font-weight:900}.hint{font-size:13px;color:var(--muted);line-height:1.45;margin-top:9px}
+    label{display:block;font-size:14px;font-weight:900;margin:8px 0 7px}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:16px;background:#fff;font:inherit;font-size:17px;color:var(--text);padding:0 14px;outline:none;-webkit-appearance:none;appearance:none}input,select{height:54px}textarea{min-height:116px;padding:12px 14px;line-height:1.45;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,116,255,.12)}
+    button{width:100%;border:0;border-radius:18px;min-height:56px;font-family:inherit;font-size:19px;font-weight:900;background:var(--blue);color:#fff;-webkit-appearance:none;appearance:none;cursor:pointer;touch-action:manipulation}button:active{transform:scale(.985)}button:disabled{opacity:.55}.secondary{background:#eef3fb;color:var(--text);font-size:16px;min-height:48px}.danger{background:var(--red);font-size:16px;min-height:48px}.orange{background:var(--orange);font-size:16px;min-height:48px}.small{font-size:15px;min-height:44px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:.8fr 1.4fr .8fr;gap:8px;align-items:end}.row3 label{font-size:13px}.title{font-size:16px;font-weight:900;margin-bottom:9px}.miniTitle{font-size:14px;font-weight:900;margin:14px 0 7px}.note{font-size:12px;color:var(--muted);line-height:1.5;margin:7px 0}.history{font-size:14px;line-height:1.75;color:var(--muted);word-break:break-word}.pill{background:#f2f6ff;border-radius:14px;padding:9px 11px;margin-top:8px;font-size:14px;line-height:1.45}.divider{height:1px;background:var(--line);margin:15px 0}.adminStatus{font-size:13px;color:var(--muted);line-height:1.5;margin-top:6px}.badText{color:var(--red);font-weight:900}.okText{color:var(--green);font-weight:900}#adminPanel,#adminArea,#historyBox{display:none}#adminPanel.show,#adminArea.show,#historyBox.show{display:block}.hidden{display:none!important}.listBox{border:1px solid var(--line);border-radius:16px;padding:10px;margin-top:8px;background:#fbfdff;max-height:160px;overflow:auto}.listItem{display:flex;gap:8px;align-items:center;justify-content:space-between;border-bottom:1px dashed #d8e1f0;padding:7px 0;font-size:14px}.listItem:last-child{border-bottom:0}.listItem span{flex:1}.removeBtn{width:auto;min-height:34px;border-radius:12px;padding:0 12px;font-size:13px;background:#ffecec;color:#b42318}.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:99}.confetti i{position:absolute;top:-20px;width:8px;height:14px;border-radius:3px;animation:fall 1.4s ease-in forwards}@keyframes fall{to{transform:translate3d(var(--x),105vh,0) rotate(560deg);opacity:0}}
   </style>
 </head>
 <body>
@@ -39,7 +35,7 @@
   </section>
 
   <section class="box">
-    <div class="title">奖项设置</div>
+    <div class="title">奖项</div>
     <div id="publicPrizeList"></div>
   </section>
 
@@ -65,229 +61,219 @@
     </div>
 
     <div id="adminArea">
+      <div class="title">本机设置说明</div>
+      <div class="pill">GitHub 只提供初始网页。管理员在本机保存的名单、奖项和抽奖记录，只保存在当前手机/电脑浏览器里，不会写回 GitHub，也不会同步到其他设备。</div>
+
+      <div class="divider"></div>
       <div class="title">参与抽奖人员名单</div>
       <textarea id="nameList" placeholder="例如：Kira Lucia Gavin&#10;张三，李四, 王五"></textarea>
       <div class="note">支持空格、英文逗号、中文逗号、顿号、分号、换行分隔。参与者看不到这份名单。</div>
       <div id="nameCount" class="adminStatus">当前名单：0人</div>
-      <button id="saveNames" type="button" class="secondary">保存名单</button>
+      <button id="saveNames" type="button" class="secondary">保存名单到本机</button>
 
       <div class="divider"></div>
       <div class="title">后台奖项设置</div>
-      <div class="note">这里的 A / B 只用于后台控制中奖概率。前台不会显示类别。抽奖时系统先按 A、B 各 50% 抽类别，再从对应类别内随机抽一个奖项。</div>
-      <div class="miniTitle">增加单个奖项</div>
+      <div class="note">A / B 只用于后台控制中奖概率。前台不会显示类别。系统先按 A、B 各 50% 抽类别，再从对应类别内随机抽一个奖项。</div>
       <div class="row3">
         <div>
           <label for="newPrizeCategory">类别</label>
-          <select id="newPrizeCategory">
-            <option value="A">A类</option>
-            <option value="B">B类</option>
-          </select>
+          <select id="newPrizeCategory"><option value="A">A类</option><option value="B">B类</option></select>
         </div>
         <div>
-          <label for="newPrizeName">奖项名称</label>
-          <input id="newPrizeName" type="text" placeholder="例如：电影券100元">
+          <label for="newPrizeName">新增奖项</label>
+          <input id="newPrizeName" type="text" placeholder="输入奖项名称">
         </div>
         <div>
-          <button id="addPrizeBtn" type="button" class="secondary small">增加</button>
+          <label>&nbsp;</label>
+          <button id="addPrize" type="button" class="secondary small">增加</button>
         </div>
       </div>
-      <div class="note">增加后会自动写入下面对应类别的奖项列表。保存奖项设置后生效。</div>
-      <div class="miniTitle">A类奖项</div>
-      <textarea id="prizeAList" placeholder="每行一个奖项，或用逗号、分号分隔"></textarea>
-      <div id="prizeACount" class="adminStatus">A类奖项：0个</div>
-      <div class="miniTitle">B类奖项</div>
-      <textarea id="prizeBList" placeholder="每行一个奖项，或用逗号、分号分隔"></textarea>
-      <div id="prizeBCount" class="adminStatus">B类奖项：0个</div>
-      <button id="savePrizes" type="button" class="secondary">保存奖项设置</button>
+      <div class="miniTitle">A类奖项</div><div id="adminPrizeA" class="listBox"></div>
+      <div class="miniTitle">B类奖项</div><div id="adminPrizeB" class="listBox"></div>
+      <button id="savePrizes" type="button" class="secondary">保存奖项设置到本机</button>
 
       <div class="divider"></div>
-      <button id="copyRecordsAdmin" type="button" class="secondary">复制中奖名单</button>
-      <div style="height:10px"></div>
+      <div class="title">中奖名单</div>
       <div class="row">
-        <button id="clearRecords" type="button" class="danger">清空记录</button>
-        <button id="logoutBtn" type="button" class="secondary">退出管理员</button>
+        <button id="copyRecordsAdmin" type="button" class="secondary">复制中奖名单</button>
+        <button id="clearRecords" type="button" class="danger">清空记录并重置资格</button>
       </div>
+
+      <div class="divider"></div>
+      <div class="title">本机配置备份</div>
+      <div class="note">换手机或换浏览器时，本机设置不会自动过去。可先导出配置，在另一台设备上粘贴导入。</div>
+      <textarea id="configText" placeholder="这里用于导出/导入本机配置"></textarea>
+      <div class="row">
+        <button id="exportConfig" type="button" class="secondary">导出本机配置</button>
+        <button id="importConfig" type="button" class="orange">导入配置到本机</button>
+      </div>
+      <button id="resetDefaults" type="button" class="danger small" style="margin-top:10px">恢复初始名单和奖项</button>
+      <button id="logoutBtn" type="button" class="secondary small" style="margin-top:10px">退出管理员</button>
     </div>
   </section>
 </main>
-<textarea id="copyBuffer" class="copyArea" aria-hidden="true"></textarea>
 <div id="confetti" class="confetti"></div>
 
 <script>
 (function(){
+  'use strict';
   var ADMIN_ID = 'Admin';
   var ADMIN_PW = 'mimahenhaoji';
-  var KEY_NAMES = 'fuhua_lucky_draw_names_mobile_v2';
-  var KEY_RECORDS = 'fuhua_lucky_draw_records_mobile_v2';
-  var KEY_PRIZES_A = 'fuhua_lucky_draw_prizes_a_v1';
-  var KEY_PRIZES_B = 'fuhua_lucky_draw_prizes_b_v1';
-  var defaultNames = ['Kira','Lucia','Gavin'];
-  var defaultPrizesA = ['商场购物卡100元','加油卡100元'];
-  var defaultPrizesB = ['上门收件洗衣服务价值100元','外卖券价值100元','上门家政服务费价值100元'];
-  var names = load(KEY_NAMES, defaultNames);
-  var records = load(KEY_RECORDS, []);
-  var prizesA = load(KEY_PRIZES_A, defaultPrizesA);
-  var prizesB = load(KEY_PRIZES_B, defaultPrizesB);
+  var KEY_STATE = 'fuhua_lucky_draw_state_github_local_v3';
+  var defaultState = {
+    names:['Kira','Lucia','Gavin'],
+    prizesA:['商场购物卡100元','加油卡100元'],
+    prizesB:['上门收件洗衣服务价值100元','外卖券价值100元','上门家政服务费价值100元'],
+    records:[]
+  };
+  var state = loadState();
   var drawing = false;
   var verified = false;
 
   function el(id){ return document.getElementById(id); }
-  function load(key, fallback){ try { var s = window.localStorage.getItem(key); return s ? JSON.parse(s) : fallback; } catch(e){ return fallback; } }
-  function save(key, value){ try { window.localStorage.setItem(key, JSON.stringify(value)); } catch(e){} }
+  function clone(o){ return JSON.parse(JSON.stringify(o)); }
+  function loadState(){
+    try{
+      var s = window.localStorage.getItem(KEY_STATE);
+      if(!s) return clone(defaultState);
+      var obj = JSON.parse(s);
+      return {
+        names:Array.isArray(obj.names)?obj.names:clone(defaultState.names),
+        prizesA:Array.isArray(obj.prizesA)&&obj.prizesA.length?obj.prizesA:clone(defaultState.prizesA),
+        prizesB:Array.isArray(obj.prizesB)&&obj.prizesB.length?obj.prizesB:clone(defaultState.prizesB),
+        records:Array.isArray(obj.records)?obj.records:[]
+      };
+    }catch(e){ return clone(defaultState); }
+  }
+  function saveState(){ try{ window.localStorage.setItem(KEY_STATE, JSON.stringify(state)); }catch(e){ alert('保存失败：浏览器可能禁止了本地存储。'); } }
   function norm(s){ return String(s || '').trim().replace(/\s+/g,' ').toLowerCase(); }
-  function splitItems(text){
-    var arr = String(text || '').split(/[\n\r,，、;；]+/g);
-    var out = [], seen = {};
-    for(var i=0;i<arr.length;i++){
-      var n = String(arr[i] || '').trim().replace(/\s+/g,' ');
-      if(!n) continue;
-      var k = norm(n);
-      if(!seen[k]){ seen[k] = true; out.push(n); }
-    }
-    return out;
-  }
   function parseNames(text){
-    var arr = String(text || '').split(/[\s,，、;；]+/g);
-    var out = [], seen = {};
-    for(var i=0;i<arr.length;i++){
-      var n = String(arr[i] || '').trim().replace(/\s+/g,' ');
-      if(!n) continue;
-      var k = norm(n);
-      if(!seen[k]){ seen[k] = true; out.push(n); }
-    }
+    var arr = String(text || '').split(/[\s,，、;；]+/g), out=[], seen={};
+    for(var i=0;i<arr.length;i++){ var n=String(arr[i]||'').trim().replace(/\s+/g,' '); if(!n) continue; var k=norm(n); if(!seen[k]){seen[k]=true; out.push(n);} }
     return out;
   }
-  function canonicalName(input){ var k = norm(input); for(var i=0;i<names.length;i++){ if(norm(names[i]) === k) return names[i]; } return null; }
-  function hasDrawn(name){ var k = norm(name); for(var i=0;i<records.length;i++){ if(norm(records[i].name) === k) return true; } return false; }
-  function rand(n){
-    if(n <= 0) return 0;
-    if(window.crypto && window.crypto.getRandomValues){ var a = new Uint32Array(1); window.crypto.getRandomValues(a); return a[0] % n; }
-    return Math.floor(Math.random() * n);
-  }
+  function canonicalName(input){ var k=norm(input); for(var i=0;i<state.names.length;i++){ if(norm(state.names[i])===k) return state.names[i]; } return null; }
+  function hasDrawn(name){ var k=norm(name); for(var i=0;i<state.records.length;i++){ if(norm(state.records[i].name)===k) return true; } return false; }
+  function rand(n){ if(n<=0) return 0; if(window.crypto && window.crypto.getRandomValues){ var a=new Uint32Array(1); window.crypto.getRandomValues(a); return a[0]%n; } return Math.floor(Math.random()*n); }
   function pickPrize(){
-    if(!prizesA.length || !prizesB.length) return null;
-    var list = rand(2) === 0 ? prizesA : prizesB;
+    var list = rand(2)===0 ? state.prizesA : state.prizesB;
+    if(!list || !list.length) list = (state.prizesA.length ? state.prizesA : state.prizesB);
     return list[rand(list.length)];
   }
-  function show(status, prize, hint, ok){
-    el('status').textContent = status; el('status').className = 'status' + (ok ? ' ok' : ''); el('prize').textContent = prize; el('hint').textContent = hint;
-  }
+  function show(status, prize, hint, ok){ el('status').textContent=status; el('status').className='status'+(ok?' ok':''); el('prize').textContent=prize; el('hint').textContent=hint; }
   function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function renderPublicPrizes(){
-    var all = prizesA.concat(prizesB);
+    var all = state.prizesA.concat(state.prizesB);
     var html = [];
-    for(var i=0;i<all.length;i++){ html.push('<div class="pill">' + escapeHtml(all[i]) + '</div>'); }
-    el('publicPrizeList').innerHTML = html.length ? html.join('') : '<div class="note">管理员尚未设置奖项。</div>';
+    for(var i=0;i<all.length;i++) html.push('<div class="pill">'+escapeHtml(all[i])+'</div>');
+    el('publicPrizeList').innerHTML = html.join('') || '<div class="note">暂无奖项，请联系管理员设置。</div>';
   }
   function renderHistory(){
-    if(!records.length){ el('historyBox').className = 'box'; el('historyList').innerHTML = ''; return; }
-    el('historyBox').className = 'box show';
-    var html = [];
-    for(var i=0;i<records.length;i++){ html.push((i+1) + '. ' + escapeHtml(records[i].name) + '｜' + escapeHtml(records[i].time) + '｜' + escapeHtml(records[i].prize)); }
-    el('historyList').innerHTML = html.join('<br>');
+    if(!state.records.length){ el('historyBox').className='box'; el('historyList').innerHTML=''; return; }
+    el('historyBox').className='box show';
+    var html=[];
+    for(var i=0;i<state.records.length;i++) html.push((i+1)+'. '+escapeHtml(state.records[i].name)+'｜'+escapeHtml(state.records[i].time)+'｜'+escapeHtml(state.records[i].prize));
+    el('historyList').innerHTML=html.join('<br>');
   }
-  function recordsText(){
-    var lines = ['姓名\t抽奖时间\t中奖奖项'];
-    for(var i=0;i<records.length;i++){ lines.push([records[i].name, records[i].time, records[i].prize].join('\t')); }
-    return lines.join('\n');
+  function renderAdminPrizes(){
+    renderOnePrizeList('adminPrizeA', state.prizesA, 'A');
+    renderOnePrizeList('adminPrizeB', state.prizesB, 'B');
   }
-  function copyRecords(){
-    if(!records.length){ alert('目前还没有中奖记录可以复制。'); return; }
-    var text = recordsText();
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(function(){ alert('中奖名单已复制，可以粘贴到微信、Excel或文档中。'); }).catch(function(){ fallbackCopy(text); });
-    } else {
-      fallbackCopy(text);
+  function renderOnePrizeList(id, list, cat){
+    var box=el(id); box.innerHTML='';
+    if(!list.length){ box.innerHTML='<div class="note">暂无奖项</div>'; return; }
+    for(var i=0;i<list.length;i++){
+      var item=document.createElement('div'); item.className='listItem';
+      var span=document.createElement('span'); span.textContent=(i+1)+'. '+list[i]; item.appendChild(span);
+      var btn=document.createElement('button'); btn.type='button'; btn.className='removeBtn'; btn.textContent='删除'; btn.setAttribute('data-cat',cat); btn.setAttribute('data-index',i); item.appendChild(btn);
+      box.appendChild(item);
     }
   }
-  function fallbackCopy(text){
-    var box = el('copyBuffer');
-    box.value = text;
-    box.focus();
-    box.select();
-    try { document.execCommand('copy'); alert('中奖名单已复制，可以粘贴到微信、Excel或文档中。'); }
-    catch(e){ alert('自动复制失败。请在抽奖记录区域手动选择并复制。'); }
+  function updateNameCount(){ el('nameCount').textContent='当前名单：'+parseNames(el('nameList').value).length+'人'; }
+  function recordsText(){
+    var lines=['姓名\t抽奖时间\t中奖奖项'];
+    for(var i=0;i<state.records.length;i++) lines.push(state.records[i].name+'\t'+state.records[i].time+'\t'+state.records[i].prize);
+    return lines.join('\n');
   }
-  function confetti(){
-    var box = el('confetti'); box.innerHTML = ''; var colors = ['#1f74ff','#12b76a','#f79009','#f04438','#7a5af8'];
-    for(var i=0;i<45;i++){ var p = document.createElement('i'); p.style.left = Math.random()*100 + '%'; p.style.background = colors[rand(colors.length)]; p.style.setProperty('--x',(Math.random()*160-80)+'px'); p.style.animationDelay=(Math.random()*0.18)+'s'; p.style.animationDuration=(1.0+Math.random()*0.7)+'s'; box.appendChild(p); }
-    setTimeout(function(){ box.innerHTML = ''; }, 1900);
+  function copyText(text){
+    if(!text || text.split('\n').length<=1){ alert('目前还没有中奖记录可复制。'); return; }
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ alert('中奖名单已复制。'); }, fallbackCopy); }
+    else fallbackCopy();
+    function fallbackCopy(){
+      var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.focus(); ta.select();
+      try{ document.execCommand('copy'); alert('中奖名单已复制。'); }catch(e){ alert('复制失败，请在管理员区导出后手动复制。'); }
+      document.body.removeChild(ta);
+    }
   }
   function validatePlayer(){
-    var raw = el('playerName').value;
+    var raw=el('playerName').value;
     if(!raw.trim()){ alert('请先输入参与抽奖人的姓名。'); el('playerName').focus(); return null; }
-    if(!names.length){ alert('管理员尚未设置参与抽奖人员名单。'); return null; }
-    if(!prizesA.length || !prizesB.length){ alert('管理员尚未完整设置奖项。A类和B类至少各需要1个奖项。'); return null; }
-    var name = canonicalName(raw);
+    if(!state.names.length){ alert('管理员尚未设置参与抽奖人员名单。'); return null; }
+    if(!state.prizesA.length && !state.prizesB.length){ alert('管理员尚未设置奖项。'); return null; }
+    if(!state.prizesA.length || !state.prizesB.length){ alert('后台奖项设置不完整：A类和B类都至少需要一个奖项，才能保证两类各50%。'); return null; }
+    var name=canonicalName(raw);
     if(!name){ alert('抱歉，此姓名不在允许抽奖名单中，不能参加本次抽奖。'); el('playerName').focus(); return null; }
-    if(hasDrawn(name)){ alert(name + ' 已经抽过奖了，每人只能抽奖一次。'); return null; }
+    if(hasDrawn(name)){ alert(name+' 已经抽过奖了，每人只能抽奖一次。'); return null; }
     return name;
   }
+  function confetti(){
+    var box=el('confetti'); box.innerHTML=''; var colors=['#1f74ff','#12b76a','#f79009','#f04438','#7a5af8'];
+    for(var i=0;i<45;i++){ var p=document.createElement('i'); p.style.left=Math.random()*100+'%'; p.style.background=colors[rand(colors.length)]; p.style.setProperty('--x',(Math.random()*160-80)+'px'); p.style.animationDelay=(Math.random()*0.18)+'s'; p.style.animationDuration=(1.0+Math.random()*0.7)+'s'; box.appendChild(p); }
+    setTimeout(function(){ box.innerHTML=''; },1900);
+  }
   function doDraw(){
-    if(drawing) return;
-    var name = validatePlayer(); if(!name) return;
-    drawing = true; el('drawBtn').disabled = true; el('playerName').disabled = true; el('drawBtn').textContent = '抽取中…'; el('ball').className = 'ball spin'; show('抽取中','好运加载中','正在为 ' + name + ' 随机抽取奖项…',false);
-    var count = 0; var timer = setInterval(function(){ var rolling = pickPrize() || '奖项待设置'; show('抽取中', rolling, '正在滚动显示，不代表最终结果。', false); count++; if(count >= 12) clearInterval(timer); }, 90);
+    if(drawing) return; var name=validatePlayer(); if(!name) return;
+    drawing=true; el('drawBtn').disabled=true; el('playerName').disabled=true; el('drawBtn').textContent='抽取中…'; el('ball').className='ball spin';
+    show('抽取中','好运加载中','正在为 '+name+' 随机抽取奖项…',false);
+    var count=0, timer=setInterval(function(){ show('抽取中',pickPrize(),'正在滚动显示，不代表最终结果。',false); count++; if(count>=12) clearInterval(timer); },90);
     setTimeout(function(){
-      var result = pickPrize();
-      if(!result){ drawing=false; el('drawBtn').disabled=false; el('playerName').disabled=false; el('ball').className='ball'; show('待抽取','奖项待设置','请管理员先完整设置A类和B类奖项。',false); return; }
-      var time = new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
-      records.push({name:name,time:time,prize:result}); save(KEY_RECORDS, records); renderHistory(); el('ball').className = 'ball'; show('已中奖', result, name + '，恭喜中奖！', true); confetti(); el('drawBtn').textContent = '开始抽奖'; el('drawBtn').disabled = false; el('playerName').disabled = false; el('playerName').value = ''; drawing = false;
-    }, 1450);
+      var result=pickPrize(); var time=new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      state.records.push({name:name,time:time,prize:result}); saveState(); renderHistory(); el('ball').className='ball'; show('已中奖',result,name+'，恭喜中奖！',true); confetti();
+      el('drawBtn').textContent='开始抽奖'; el('drawBtn').disabled=false; el('playerName').disabled=false; el('playerName').value=''; drawing=false;
+    },1450);
   }
-  function updateNameCount(){ el('nameCount').textContent = '当前名单：' + parseNames(el('nameList').value).length + '人'; }
-  function updatePrizeCount(){ el('prizeACount').textContent = 'A类奖项：' + splitItems(el('prizeAList').value).length + '个'; el('prizeBCount').textContent = 'B类奖项：' + splitItems(el('prizeBList').value).length + '个'; }
   function login(){
-    if(el('adminId').value.trim() === ADMIN_ID && el('adminPw').value === ADMIN_PW){
-      verified = true; el('loginArea').style.display = 'none'; el('adminArea').className = 'show'; el('nameList').value = names.join('\n'); el('prizeAList').value = prizesA.join('\n'); el('prizeBList').value = prizesB.join('\n'); updateNameCount(); updatePrizeCount(); alert('验证成功。现在可以设置名单和奖项。'); setTimeout(function(){ el('nameList').focus(); }, 80);
-    } else { el('loginStatus').innerHTML = '<span class="badText">管理员ID或密码不正确。</span>'; el('adminPw').value = ''; alert('管理员ID或密码不正确。'); }
+    if(el('adminId').value.trim()===ADMIN_ID && el('adminPw').value===ADMIN_PW){
+      verified=true; el('loginArea').style.display='none'; el('adminArea').className='show'; el('nameList').value=state.names.join('\n'); updateNameCount(); renderAdminPrizes(); alert('验证成功。现在可以设置本机名单和奖项。'); setTimeout(function(){ el('nameList').focus(); },80);
+    }else{ el('loginStatus').innerHTML='<span class="badText">管理员ID或密码不正确。</span>'; el('adminPw').value=''; alert('管理员ID或密码不正确。'); }
   }
-  function saveNames(){
-    if(!verified){ alert('请先完成管理员验证。'); return; }
-    var arr = parseNames(el('nameList').value); if(arr.length === 0 && !confirm('名单为空，保存后将没有人可以参与抽奖。确定保存吗？')) return;
-    names = arr; save(KEY_NAMES, names); updateNameCount(); alert('名单已保存：' + names.length + '人。');
-  }
-  function savePrizes(){
-    if(!verified){ alert('请先完成管理员验证。'); return; }
-    var a = splitItems(el('prizeAList').value); var b = splitItems(el('prizeBList').value);
-    if(a.length === 0 || b.length === 0){ alert('A类和B类至少各需要设置1个奖项，才能保证两类各50%的中奖概率。'); return; }
-    prizesA = a; prizesB = b; save(KEY_PRIZES_A, prizesA); save(KEY_PRIZES_B, prizesB); updatePrizeCount(); renderPublicPrizes(); alert('奖项已保存。系统将按A类50%、B类50%进行抽取。');
-  }
+  function saveNames(){ if(!verified){alert('请先完成管理员验证。');return;} var arr=parseNames(el('nameList').value); if(arr.length===0 && !confirm('名单为空，保存后将没有人可以参与抽奖。确定保存吗？')) return; state.names=arr; saveState(); updateNameCount(); alert('名单已保存到本机：'+state.names.length+'人。'); }
   function addPrize(){
-    if(!verified){ alert('请先完成管理员验证。'); return; }
-    var prize = String(el('newPrizeName').value || '').trim().replace(/\s+/g,' ');
-    if(!prize){ alert('请先输入要增加的奖项名称。'); el('newPrizeName').focus(); return; }
-    var target = el('newPrizeCategory').value === 'B' ? el('prizeBList') : el('prizeAList');
-    var existing = splitItems(target.value);
-    for(var i=0;i<existing.length;i++){ if(norm(existing[i]) === norm(prize)){ alert('这个奖项已经在对应类别中，不需要重复增加。'); return; } }
-    target.value = target.value.trim() ? target.value.trim() + '\n' + prize : prize;
-    el('newPrizeName').value = '';
-    updatePrizeCount();
-    alert('奖项已增加到' + (el('newPrizeCategory').value === 'B' ? 'B类' : 'A类') + '列表。请点击“保存奖项设置”后正式生效。');
+    if(!verified){alert('请先完成管理员验证。');return;} var name=el('newPrizeName').value.trim(); if(!name){alert('请输入新增奖项名称。');return;} var cat=el('newPrizeCategory').value;
+    var list=cat==='A'?state.prizesA:state.prizesB; list.push(name); el('newPrizeName').value=''; renderAdminPrizes(); renderPublicPrizes(); alert('已增加到'+cat+'类。请点击“保存奖项设置到本机”正式保存。');
   }
-  function clearRecords(){
-    if(!verified){ alert('请先完成管理员验证。'); return; }
-    if(!confirm('确定要清空抽奖记录，并重置所有人的抽奖资格吗？')) return;
-    records = []; save(KEY_RECORDS, records); renderHistory(); show('待抽取','准备好了吗？','请输入姓名后点击开始抽奖。',false); alert('抽奖记录已清空，所有人可以重新抽奖。');
+  function removePrize(cat, index){
+    var list=cat==='A'?state.prizesA:state.prizesB; if(index<0 || index>=list.length) return; if(!confirm('确定删除这个奖项吗？')) return; list.splice(index,1); renderAdminPrizes(); renderPublicPrizes();
   }
-  function logout(){ verified = false; el('loginArea').style.display = 'block'; el('adminArea').className = ''; el('adminPw').value = ''; el('loginStatus').textContent = '已退出管理员。'; }
+  function savePrizes(){ if(!verified){alert('请先完成管理员验证。');return;} if(!state.prizesA.length || !state.prizesB.length){ alert('A类和B类都至少需要一个奖项，否则无法保证两类各50%。'); return; } saveState(); renderPublicPrizes(); alert('奖项设置已保存到本机。'); }
+  function clearRecords(){ if(!verified){alert('请先完成管理员验证。');return;} if(!confirm('确定要清空抽奖记录，并重置所有人的抽奖资格吗？')) return; state.records=[]; saveState(); renderHistory(); show('待抽取','准备好了吗？','请输入姓名后点击开始抽奖。',false); alert('抽奖记录已清空，所有人可以重新抽奖。'); }
+  function exportConfig(){ el('configText').value=JSON.stringify(state,null,2); el('configText').focus(); el('configText').select(); alert('本机配置已导出到文本框，可复制保存。'); }
+  function importConfig(){
+    if(!verified){alert('请先完成管理员验证。');return;} var txt=el('configText').value.trim(); if(!txt){alert('请先粘贴要导入的配置。');return;}
+    try{ var obj=JSON.parse(txt); if(!Array.isArray(obj.names)||!Array.isArray(obj.prizesA)||!Array.isArray(obj.prizesB)||!Array.isArray(obj.records)) throw new Error('bad'); state={names:obj.names,prizesA:obj.prizesA,prizesB:obj.prizesB,records:obj.records}; saveState(); el('nameList').value=state.names.join('\n'); updateNameCount(); renderAdminPrizes(); renderPublicPrizes(); renderHistory(); alert('配置已导入并保存到本机。'); }catch(e){ alert('导入失败：配置文本格式不正确。'); }
+  }
+  function resetDefaults(){ if(!verified){alert('请先完成管理员验证。');return;} if(!confirm('确定恢复初始名单和奖项？这也会清空抽奖记录。')) return; state=clone(defaultState); saveState(); el('nameList').value=state.names.join('\n'); updateNameCount(); renderAdminPrizes(); renderPublicPrizes(); renderHistory(); alert('已恢复初始设置。'); }
+  function logout(){ verified=false; el('loginArea').style.display='block'; el('adminArea').className=''; el('adminPw').value=''; el('loginStatus').textContent='已退出管理员。'; }
 
-  el('drawBtn').addEventListener('click', doDraw, false);
-  el('playerName').addEventListener('keydown', function(e){ if(e.key === 'Enter') doDraw(); }, false);
-  el('adminToggle').addEventListener('click', function(){ el('adminPanel').className = el('adminPanel').className.indexOf('show') >= 0 ? 'box' : 'box show'; }, false);
-  el('loginBtn').addEventListener('click', login, false);
-  el('adminPw').addEventListener('keydown', function(e){ if(e.key === 'Enter') login(); }, false);
-  el('nameList').addEventListener('input', updateNameCount, false);
-  el('prizeAList').addEventListener('input', updatePrizeCount, false);
-  el('prizeBList').addEventListener('input', updatePrizeCount, false);
-  el('saveNames').addEventListener('click', saveNames, false);
-  el('addPrizeBtn').addEventListener('click', addPrize, false);
-  el('newPrizeName').addEventListener('keydown', function(e){ if(e.key === 'Enter') addPrize(); }, false);
-  el('savePrizes').addEventListener('click', savePrizes, false);
-  el('copyRecordsPublic').addEventListener('click', copyRecords, false);
-  el('copyRecordsAdmin').addEventListener('click', copyRecords, false);
-  el('clearRecords').addEventListener('click', clearRecords, false);
-  el('logoutBtn').addEventListener('click', logout, false);
+  el('drawBtn').addEventListener('click',doDraw,false);
+  el('playerName').addEventListener('keydown',function(e){ if(e.key==='Enter') doDraw(); },false);
+  el('adminToggle').addEventListener('click',function(){ el('adminPanel').className=el('adminPanel').className.indexOf('show')>=0?'box':'box show'; },false);
+  el('loginBtn').addEventListener('click',login,false);
+  el('adminPw').addEventListener('keydown',function(e){ if(e.key==='Enter') login(); },false);
+  el('nameList').addEventListener('input',updateNameCount,false);
+  el('saveNames').addEventListener('click',saveNames,false);
+  el('addPrize').addEventListener('click',addPrize,false);
+  el('newPrizeName').addEventListener('keydown',function(e){ if(e.key==='Enter') addPrize(); },false);
+  el('adminPrizeA').addEventListener('click',function(e){ if(e.target && e.target.className==='removeBtn') removePrize(e.target.getAttribute('data-cat'),parseInt(e.target.getAttribute('data-index'),10)); },false);
+  el('adminPrizeB').addEventListener('click',function(e){ if(e.target && e.target.className==='removeBtn') removePrize(e.target.getAttribute('data-cat'),parseInt(e.target.getAttribute('data-index'),10)); },false);
+  el('savePrizes').addEventListener('click',savePrizes,false);
+  el('copyRecordsPublic').addEventListener('click',function(){ copyText(recordsText()); },false);
+  el('copyRecordsAdmin').addEventListener('click',function(){ copyText(recordsText()); },false);
+  el('clearRecords').addEventListener('click',clearRecords,false);
+  el('exportConfig').addEventListener('click',exportConfig,false);
+  el('importConfig').addEventListener('click',importConfig,false);
+  el('resetDefaults').addEventListener('click',resetDefaults,false);
+  el('logoutBtn').addEventListener('click',logout,false);
   renderPublicPrizes(); renderHistory();
 })();
 </script>
