@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <title>幸运抽奖</title>
+  <style>
+    :root{
+      --bg:#f3f7ff;--card:#ffffff;--text:#172033;--muted:#667085;--blue:#1f74ff;--green:#12b76a;--red:#f04438;--line:#d9e2f2;--shadow:0 16px 40px rgba(31,116,255,.16);
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:linear-gradient(180deg,#ffffff,var(--bg));color:var(--text)}
+    body{padding:18px 14px 28px;display:flex;justify-content:center}
+    .app{width:100%;max-width:480px}
+    h1{text-align:center;font-size:40px;line-height:1;margin:16px 0 10px;letter-spacing:-1px}.sub{text-align:center;color:var(--muted);font-size:15px;line-height:1.45;margin:0 10px 16px}
+    .card,.box{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:18px;margin-bottom:14px}
+    .ball{width:min(70vw,270px);height:min(70vw,270px);border-radius:50%;margin:6px auto 18px;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;background:radial-gradient(circle at 35% 25%,#fff 0,#f8fbff 35%,#dfeaff 100%);box-shadow:inset 0 0 28px rgba(255,255,255,.8),0 12px 36px rgba(31,116,255,.18)}
+    .ball.spin{animation:pulse .7s ease-in-out infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+    .status{display:inline-block;border-radius:999px;padding:7px 13px;background:#98a2b3;color:white;font-weight:800;font-size:14px;margin-bottom:12px}.status.ok{background:var(--green)}
+    .prize{font-size:25px;line-height:1.18;font-weight:900}.hint{font-size:13px;color:var(--muted);line-height:1.4;margin-top:9px}
+    label{display:block;font-size:14px;font-weight:900;margin:8px 0 7px}input,textarea{width:100%;border:1px solid var(--line);border-radius:16px;background:#fff;font:inherit;font-size:17px;color:var(--text);padding:0 14px;outline:none;-webkit-appearance:none}input{height:54px}textarea{min-height:150px;padding:12px 14px;line-height:1.45;resize:vertical}input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,116,255,.12)}
+    button{width:100%;border:0;border-radius:18px;min-height:56px;font-family:inherit;font-size:19px;font-weight:900;background:var(--blue);color:#fff;-webkit-appearance:none;appearance:none;cursor:pointer;touch-action:manipulation}button:active{transform:scale(.985)}button:disabled{opacity:.55}.secondary{background:#eef3fb;color:var(--text);font-size:16px;min-height:48px}.danger{background:var(--red);font-size:16px;min-height:48px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.small{font-size:15px;min-height:44px}
+    .title{font-size:16px;font-weight:900;margin-bottom:9px}.pill{background:#f2f6ff;border-radius:14px;padding:9px 11px;margin-top:8px;font-size:14px}.note{font-size:12px;color:var(--muted);line-height:1.45;margin:7px 0}.history{font-size:14px;line-height:1.75;color:var(--muted)}
+    #adminPanel,#adminArea,#historyBox{display:none}#adminPanel.show,#adminArea.show,#historyBox.show{display:block}.okText{color:var(--green);font-weight:900}.badText{color:var(--red);font-weight:900}.adminStatus{font-size:13px;color:var(--muted);line-height:1.5;margin-top:6px}
+    .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:99}.confetti i{position:absolute;top:-20px;width:8px;height:14px;border-radius:3px;animation:fall 1.4s ease-in forwards}@keyframes fall{to{transform:translate3d(var(--x),105vh,0) rotate(560deg);opacity:0}}
+  </style>
+</head>
+<body>
+<main class="app">
+  <h1>幸运抽奖</h1>
+  <p class="sub">请输入姓名后开始抽奖。每位符合名单的参与者仅可抽奖一次。</p>
+
+  <section class="card">
+    <div id="ball" class="ball">
+      <div>
+        <div id="status" class="status">待抽取</div>
+        <div id="prize" class="prize">准备好了吗？</div>
+        <div id="hint" class="hint">请输入姓名后点击开始抽奖。</div>
+      </div>
+    </div>
+    <label for="playerName">参与抽奖人姓名</label>
+    <input id="playerName" type="text" autocomplete="name" placeholder="请输入姓名">
+    <div class="note">系统会自动验证抽奖资格；不在名单内或已经抽过奖，将不能继续抽奖。</div>
+    <button id="drawBtn" type="button">开始抽奖</button>
+  </section>
+
+  <section class="box">
+    <div class="title">奖项设置</div>
+    <div class="pill">商场购物卡100元</div>
+    <div class="pill">加油卡100元</div>
+    <div class="pill">上门收件洗衣服务价值100元</div>
+    <div class="pill">外卖券价值100元</div>
+    <div class="pill">上门家政服务费价值100元</div>
+  </section>
+
+  <section id="historyBox" class="box">
+    <div class="title">抽奖记录</div>
+    <div id="historyList" class="history"></div>
+  </section>
+
+  <button id="adminToggle" type="button" class="secondary">管理员设置</button>
+
+  <section id="adminPanel" class="box">
+    <div class="title">管理员验证</div>
+    <div id="loginArea">
+      <label for="adminId">管理员ID</label>
+      <input id="adminId" type="text" autocapitalize="none" autocomplete="username" placeholder="请输入管理员ID">
+      <label for="adminPw">密码</label>
+      <input id="adminPw" type="password" autocomplete="current-password" placeholder="请输入密码">
+      <div class="note">管理员验证后，才会显示和编辑参与抽奖人员名单。</div>
+      <button id="loginBtn" type="button" class="secondary">验证并进入名单设置</button>
+      <div id="loginStatus" class="adminStatus">请输入管理员ID和密码。</div>
+    </div>
+
+    <div id="adminArea">
+      <div class="title">参与抽奖人员名单</div>
+      <textarea id="nameList" placeholder="例如：Kira Lucia Gavin&#10;张三，李四, 王五"></textarea>
+      <div class="note">支持空格、英文逗号、中文逗号、顿号、分号、换行分隔。参与者看不到这份名单。</div>
+      <div id="nameCount" class="adminStatus">当前名单：0人</div>
+      <div class="row">
+        <button id="saveNames" type="button" class="secondary">保存名单</button>
+        <button id="clearRecords" type="button" class="danger">清空记录</button>
+      </div>
+      <button id="logoutBtn" type="button" class="secondary small" style="margin-top:10px">退出管理员</button>
+    </div>
+  </section>
+</main>
+<div id="confetti" class="confetti"></div>
+
+<script>
+(function(){
+  var ADMIN_ID = 'Admin';
+  var ADMIN_PW = 'mimahenhaoji';
+  var KEY_NAMES = 'fuhua_lucky_draw_names_mobile_v1';
+  var KEY_RECORDS = 'fuhua_lucky_draw_records_mobile_v1';
+  var defaultNames = ['Kira','Lucia','Gavin'];
+  var prizesA = ['商场购物卡100元','加油卡100元'];
+  var prizesB = ['上门收件洗衣服务价值100元','外卖券价值100元','上门家政服务费价值100元'];
+  var names = load(KEY_NAMES, defaultNames);
+  var records = load(KEY_RECORDS, []);
+  var drawing = false;
+  var verified = false;
+
+  function el(id){ return document.getElementById(id); }
+  function load(key, fallback){ try { var s = window.localStorage.getItem(key); return s ? JSON.parse(s) : fallback; } catch(e){ return fallback; } }
+  function save(key, value){ try { window.localStorage.setItem(key, JSON.stringify(value)); } catch(e){} }
+  function norm(s){ return String(s || '').trim().replace(/\s+/g,' ').toLowerCase(); }
+  function parseNames(text){
+    var arr = String(text || '').split(/[\s,，、;；]+/g);
+    var out = [], seen = {};
+    for(var i=0;i<arr.length;i++){
+      var n = String(arr[i] || '').trim().replace(/\s+/g,' ');
+      if(!n) continue;
+      var k = norm(n);
+      if(!seen[k]){ seen[k] = true; out.push(n); }
+    }
+    return out;
+  }
+  function canonicalName(input){
+    var k = norm(input);
+    for(var i=0;i<names.length;i++){ if(norm(names[i]) === k) return names[i]; }
+    return null;
+  }
+  function hasDrawn(name){
+    var k = norm(name);
+    for(var i=0;i<records.length;i++){ if(norm(records[i].name) === k) return true; }
+    return false;
+  }
+  function rand(n){
+    if(window.crypto && window.crypto.getRandomValues){
+      var a = new Uint32Array(1); window.crypto.getRandomValues(a); return a[0] % n;
+    }
+    return Math.floor(Math.random() * n);
+  }
+  function pickPrize(){ var list = rand(2) === 0 ? prizesA : prizesB; return list[rand(list.length)]; }
+  function show(status, prize, hint, ok){
+    el('status').textContent = status;
+    el('status').className = 'status' + (ok ? ' ok' : '');
+    el('prize').textContent = prize;
+    el('hint').textContent = hint;
+  }
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function renderHistory(){
+    if(!records.length){ el('historyBox').className = 'box'; el('historyList').innerHTML = ''; return; }
+    el('historyBox').className = 'box show';
+    var html = [];
+    for(var i=0;i<records.length;i++){
+      html.push((i+1) + '. ' + escapeHtml(records[i].name) + '｜' + escapeHtml(records[i].time) + '｜' + escapeHtml(records[i].prize));
+    }
+    el('historyList').innerHTML = html.join('<br>');
+  }
+  function confetti(){
+    var box = el('confetti'); box.innerHTML = '';
+    var colors = ['#1f74ff','#12b76a','#f79009','#f04438','#7a5af8'];
+    for(var i=0;i<45;i++){
+      var p = document.createElement('i');
+      p.style.left = Math.random()*100 + '%';
+      p.style.background = colors[rand(colors.length)];
+      p.style.setProperty('--x', (Math.random()*160-80) + 'px');
+      p.style.animationDelay = (Math.random()*0.18) + 's';
+      p.style.animationDuration = (1.0 + Math.random()*0.7) + 's';
+      box.appendChild(p);
+    }
+    setTimeout(function(){ box.innerHTML = ''; }, 1900);
+  }
+  function validatePlayer(){
+    var raw = el('playerName').value;
+    if(!raw.trim()){ alert('请先输入参与抽奖人的姓名。'); el('playerName').focus(); return null; }
+    if(!names.length){ alert('管理员尚未设置参与抽奖人员名单。'); return null; }
+    var name = canonicalName(raw);
+    if(!name){ alert('抱歉，此姓名不在允许抽奖名单中，不能参加本次抽奖。'); el('playerName').focus(); return null; }
+    if(hasDrawn(name)){ alert(name + ' 已经抽过奖了，每人只能抽奖一次。'); return null; }
+    return name;
+  }
+  function doDraw(){
+    if(drawing) return;
+    var name = validatePlayer();
+    if(!name) return;
+    drawing = true;
+    el('drawBtn').disabled = true;
+    el('playerName').disabled = true;
+    el('drawBtn').textContent = '抽取中…';
+    el('ball').className = 'ball spin';
+    show('抽取中','好运加载中','正在为 ' + name + ' 随机抽取奖项…',false);
+    var count = 0;
+    var timer = setInterval(function(){ show('抽取中', pickPrize(), '正在滚动显示，不代表最终结果。', false); count++; if(count >= 12) clearInterval(timer); }, 90);
+    setTimeout(function(){
+      var result = pickPrize();
+      var time = new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      records.push({name:name, time:time, prize:result});
+      save(KEY_RECORDS, records);
+      renderHistory();
+      el('ball').className = 'ball';
+      show('已中奖', result, name + '，恭喜中奖！', true);
+      confetti();
+      el('drawBtn').textContent = '开始抽奖';
+      el('drawBtn').disabled = false;
+      el('playerName').disabled = false;
+      el('playerName').value = '';
+      drawing = false;
+    }, 1450);
+  }
+  function updateNameCount(){ el('nameCount').textContent = '当前名单：' + parseNames(el('nameList').value).length + '人'; }
+  function login(){
+    if(el('adminId').value.trim() === ADMIN_ID && el('adminPw').value === ADMIN_PW){
+      verified = true;
+      el('loginArea').style.display = 'none';
+      el('adminArea').className = 'show';
+      el('nameList').value = names.join('\n');
+      updateNameCount();
+      alert('验证成功。现在可以设置抽奖人员名单。');
+      setTimeout(function(){ el('nameList').focus(); }, 80);
+    } else {
+      el('loginStatus').innerHTML = '<span class="badText">管理员ID或密码不正确。</span>';
+      el('adminPw').value = '';
+      alert('管理员ID或密码不正确。');
+    }
+  }
+  function saveNames(){
+    if(!verified){ alert('请先完成管理员验证。'); return; }
+    var arr = parseNames(el('nameList').value);
+    if(arr.length === 0 && !confirm('名单为空，保存后将没有人可以参与抽奖。确定保存吗？')) return;
+    names = arr; save(KEY_NAMES, names); updateNameCount(); alert('名单已保存：' + names.length + '人。');
+  }
+  function clearRecords(){
+    if(!verified){ alert('请先完成管理员验证。'); return; }
+    if(!confirm('确定要清空抽奖记录，并重置所有人的抽奖资格吗？')) return;
+    records = []; save(KEY_RECORDS, records); renderHistory(); show('待抽取','准备好了吗？','请输入姓名后点击开始抽奖。',false); alert('抽奖记录已清空，所有人可以重新抽奖。');
+  }
+  function logout(){
+    verified = false;
+    el('loginArea').style.display = 'block';
+    el('adminArea').className = '';
+    el('adminPw').value = '';
+    el('loginStatus').textContent = '已退出管理员。';
+  }
+
+  el('drawBtn').addEventListener('click', doDraw, false);
+  el('playerName').addEventListener('keydown', function(e){ if(e.key === 'Enter') doDraw(); }, false);
+  el('adminToggle').addEventListener('click', function(){ el('adminPanel').className = el('adminPanel').className.indexOf('show') >= 0 ? 'box' : 'box show'; }, false);
+  el('loginBtn').addEventListener('click', login, false);
+  el('adminPw').addEventListener('keydown', function(e){ if(e.key === 'Enter') login(); }, false);
+  el('nameList').addEventListener('input', updateNameCount, false);
+  el('saveNames').addEventListener('click', saveNames, false);
+  el('clearRecords').addEventListener('click', clearRecords, false);
+  el('logoutBtn').addEventListener('click', logout, false);
+  renderHistory();
+})();
+</script>
+</body>
+</html>
