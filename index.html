@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="format-detection" content="telephone=no">
-  <title>幸运抽奖</title>
+  <title>Lucky Draw</title>
   <style>
     :root{--bg:#f4f7ff;--card:#fff;--text:#172033;--muted:#667085;--blue:#1f74ff;--green:#12b76a;--red:#f04438;--orange:#f79009;--line:#d9e2f2;--shadow:0 16px 38px rgba(31,116,255,.14)}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:linear-gradient(180deg,#fff,var(--bg));color:var(--text)}
     body{padding:18px 14px 30px;display:flex;justify-content:center}.app{width:100%;max-width:520px}
     h1{text-align:center;font-size:38px;line-height:1;margin:16px 0 10px;letter-spacing:-1px}.sub{text-align:center;color:var(--muted);font-size:15px;line-height:1.45;margin:0 8px 16px}
+    .topbar{display:flex;justify-content:flex-end;margin:2px 0 8px}.langSwitch{display:flex;gap:6px;background:#eef3fb;border:1px solid var(--line);border-radius:999px;padding:4px}.langBtn{width:auto;min-height:34px;border-radius:999px;padding:0 12px;font-size:13px;background:transparent;color:var(--text)}.langBtn.active{background:var(--blue);color:#fff}
     .card,.box{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:18px;margin-bottom:14px}.box.flat{box-shadow:none}
     .ball{width:min(70vw,265px);height:min(70vw,265px);border-radius:50%;margin:6px auto 18px;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background:radial-gradient(circle at 35% 25%,#fff 0,#f8fbff 35%,#dfeaff 100%);box-shadow:inset 0 0 28px rgba(255,255,255,.8),0 12px 34px rgba(31,116,255,.18)}
     .ball.spin{animation:pulse .7s ease-in-out infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
@@ -23,92 +24,98 @@
 </head>
 <body>
 <main class="app">
-  <h1>幸运抽奖</h1>
-  <p class="sub">请输入姓名后开始抽奖。每位符合名单的参与者仅可抽奖一次。</p>
+  <div class="topbar">
+    <div class="langSwitch" aria-label="Language switch">
+      <button id="langZh" type="button" class="langBtn active">中文</button>
+      <button id="langEn" type="button" class="langBtn">EN</button>
+    </div>
+  </div>
+  <h1 data-i18n="title">幸运抽奖</h1>
+  <p class="sub" data-i18n="subtitle">请输入姓名后开始抽奖。每位符合名单的参与者仅可抽奖一次。</p>
 
   <section class="card">
     <div id="ball" class="ball"><div><div id="status" class="status">待抽取</div><div id="prize" class="prize">准备好了吗？</div><div id="hint" class="hint">请输入姓名后点击开始抽奖。</div></div></div>
-    <label for="playerName">参与抽奖人姓名</label>
-    <input id="playerName" type="text" autocomplete="name" placeholder="请输入姓名">
-    <div class="note">系统会自动验证抽奖资格；不在名单内或已经抽过奖，将不能继续抽奖。</div>
-    <button id="drawBtn" type="button">开始抽奖</button>
+    <label for="playerName" data-i18n="nameLabel">参与抽奖人姓名</label>
+    <input id="playerName" type="text" autocomplete="name" placeholder="请输入姓名" data-i18n-placeholder="namePlaceholder">
+    <div class="note" data-i18n="eligibilityNote">系统会自动验证抽奖资格；不在名单内或已经抽过奖，将不能继续抽奖。</div>
+    <button id="drawBtn" type="button" data-i18n="drawBtn">开始抽奖</button>
   </section>
 
   <section class="box">
-    <div class="title">奖项</div>
+    <div class="title" data-i18n="prizesTitle">奖项</div>
     <div id="publicPrizeList"></div>
   </section>
 
   <section id="historyBox" class="box">
-    <div class="title">抽奖记录</div>
+    <div class="title" data-i18n="historyTitle">抽奖记录</div>
     <div id="historyList" class="history"></div>
     <div style="height:10px"></div>
-    <button id="copyRecordsPublic" type="button" class="secondary">复制中奖名单</button>
+    <button id="copyRecordsPublic" type="button" class="secondary" data-i18n="copyRecords">复制中奖名单</button>
   </section>
 
-  <button id="adminToggle" type="button" class="secondary">管理员设置</button>
+  <button id="adminToggle" type="button" class="secondary" data-i18n="adminSettings">管理员设置</button>
 
   <section id="adminPanel" class="box">
-    <div class="title">管理员验证</div>
+    <div class="title" data-i18n="adminLoginTitle">管理员验证</div>
     <div id="loginArea">
-      <label for="adminId">管理员ID</label>
-      <input id="adminId" type="text" autocapitalize="none" autocomplete="username" placeholder="请输入管理员ID">
-      <label for="adminPw">密码</label>
-      <input id="adminPw" type="password" autocomplete="current-password" placeholder="请输入密码">
-      <div class="note">管理员验证后，才会显示和编辑参与人员名单、奖项设置和抽奖记录。</div>
-      <button id="loginBtn" type="button" class="secondary">验证并进入后台设置</button>
+      <label for="adminId" data-i18n="adminIdLabel">管理员ID</label>
+      <input id="adminId" type="text" autocapitalize="none" autocomplete="username" placeholder="请输入管理员ID" data-i18n-placeholder="adminIdPlaceholder">
+      <label for="adminPw" data-i18n="passwordLabel">密码</label>
+      <input id="adminPw" type="password" autocomplete="current-password" placeholder="请输入密码" data-i18n-placeholder="passwordPlaceholder">
+      <div class="note" data-i18n="adminLoginNote">管理员验证后，才会显示和编辑参与人员名单、奖项设置和抽奖记录。</div>
+      <button id="loginBtn" type="button" class="secondary" data-i18n="loginBtn">验证并进入后台设置</button>
       <div id="loginStatus" class="adminStatus">请输入管理员ID和密码。</div>
     </div>
 
     <div id="adminArea">
-      <div class="title">本机设置说明</div>
-      <div class="pill">GitHub 只提供初始网页。管理员在本机保存的名单、奖项和抽奖记录，只保存在当前手机/电脑浏览器里，不会写回 GitHub，也不会同步到其他设备。</div>
+      <div class="title" data-i18n="localSettingsTitle">本机设置说明</div>
+      <div class="pill" data-i18n="localSettingsNote">GitHub 只提供初始网页。管理员在本机保存的名单、奖项和抽奖记录，只保存在当前手机/电脑浏览器里，不会写回 GitHub，也不会同步到其他设备。</div>
 
       <div class="divider"></div>
-      <div class="title">参与抽奖人员名单</div>
-      <textarea id="nameList" placeholder="例如：Kira Lucia Gavin&#10;张三，李四, 王五"></textarea>
-      <div class="note">支持空格、英文逗号、中文逗号、顿号、分号、换行分隔。参与者看不到这份名单。</div>
+      <div class="title" data-i18n="eligibleNamesTitle">参与抽奖人员名单</div>
+      <textarea id="nameList" placeholder="例如：Kira Lucia Gavin&#10;张三，李四, 王五" data-i18n-placeholder="namesPlaceholder"></textarea>
+      <div class="note" data-i18n="namesNote">支持空格、英文逗号、中文逗号、顿号、分号、换行分隔。参与者看不到这份名单。</div>
       <div id="nameCount" class="adminStatus">当前名单：0人</div>
-      <button id="saveNames" type="button" class="secondary">保存名单到本机</button>
+      <button id="saveNames" type="button" class="secondary" data-i18n="saveNames">保存名单到本机</button>
 
       <div class="divider"></div>
-      <div class="title">后台奖项设置</div>
-      <div class="note">A / B 只用于后台控制中奖概率。前台不会显示类别。系统会根据已抽结果强制平衡 A / B：如果上一轮导致 A 多一次，下一位只能从 B 类抽；如果 B 多一次，下一位只能从 A 类抽；两类次数相等时随机决定下一类。</div>
+      <div class="title" data-i18n="backendPrizesTitle">后台奖项设置</div>
+      <div class="note" data-i18n="balanceNote">A / B 只用于后台控制中奖类别。前台不会显示类别。系统会根据已抽结果强制平衡 A / B，使两类中奖次数最多只相差 1 次。</div>
       <div class="row3">
         <div>
-          <label for="newPrizeCategory">类别</label>
-          <select id="newPrizeCategory"><option value="A">A类</option><option value="B">B类</option></select>
+          <label for="newPrizeCategory" data-i18n="categoryLabel">类别</label>
+          <select id="newPrizeCategory"><option value="A" data-i18n="catA">A类</option><option value="B" data-i18n="catB">B类</option></select>
         </div>
         <div>
-          <label for="newPrizeName">新增奖项</label>
-          <input id="newPrizeName" type="text" placeholder="输入奖项名称">
+          <label for="newPrizeName" data-i18n="newPrizeLabel">新增奖项</label>
+          <input id="newPrizeName" type="text" placeholder="输入奖项名称" data-i18n-placeholder="newPrizePlaceholder">
         </div>
         <div>
           <label>&nbsp;</label>
-          <button id="addPrize" type="button" class="secondary small">增加</button>
+          <button id="addPrize" type="button" class="secondary small" data-i18n="addBtn">增加</button>
         </div>
       </div>
-      <div class="miniTitle">A类奖项</div><div id="adminPrizeA" class="listBox"></div>
-      <div class="miniTitle">B类奖项</div><div id="adminPrizeB" class="listBox"></div>
-      <button id="savePrizes" type="button" class="secondary">保存奖项设置到本机</button>
+      <div class="miniTitle" data-i18n="catATitle">A类奖项</div><div id="adminPrizeA" class="listBox"></div>
+      <div class="miniTitle" data-i18n="catBTitle">B类奖项</div><div id="adminPrizeB" class="listBox"></div>
+      <button id="savePrizes" type="button" class="secondary" data-i18n="savePrizes">保存奖项设置到本机</button>
 
       <div class="divider"></div>
-      <div class="title">中奖名单</div>
+      <div class="title" data-i18n="winningListTitle">中奖名单</div>
       <div class="row">
-        <button id="copyRecordsAdmin" type="button" class="secondary">复制中奖名单</button>
-        <button id="clearRecords" type="button" class="danger">清空记录并重置资格</button>
+        <button id="copyRecordsAdmin" type="button" class="secondary" data-i18n="copyRecords">复制中奖名单</button>
+        <button id="clearRecords" type="button" class="danger" data-i18n="clearRecords">清空记录并重置资格</button>
       </div>
 
       <div class="divider"></div>
-      <div class="title">本机配置备份</div>
-      <div class="note">换手机或换浏览器时，本机设置不会自动过去。可先导出配置，在另一台设备上粘贴导入。</div>
-      <textarea id="configText" placeholder="这里用于导出/导入本机配置"></textarea>
+      <div class="title" data-i18n="backupTitle">本机配置备份</div>
+      <div class="note" data-i18n="backupNote">换手机或换浏览器时，本机设置不会自动过去。可先导出配置，在另一台设备上粘贴导入。</div>
+      <textarea id="configText" placeholder="这里用于导出/导入本机配置" data-i18n-placeholder="configPlaceholder"></textarea>
       <div class="row">
-        <button id="exportConfig" type="button" class="secondary">导出本机配置</button>
-        <button id="importConfig" type="button" class="orange">导入配置到本机</button>
+        <button id="exportConfig" type="button" class="secondary" data-i18n="exportConfig">导出本机配置</button>
+        <button id="importConfig" type="button" class="orange" data-i18n="importConfig">导入配置到本机</button>
       </div>
-      <button id="resetDefaults" type="button" class="danger small" style="margin-top:10px">恢复初始名单和奖项</button>
-      <button id="logoutBtn" type="button" class="secondary small" style="margin-top:10px">退出管理员</button>
+      <button id="resetDefaults" type="button" class="danger small" style="margin-top:10px" data-i18n="resetDefaults">恢复初始名单和奖项</button>
+      <button id="logoutBtn" type="button" class="secondary small" style="margin-top:10px" data-i18n="logout">退出管理员</button>
     </div>
   </section>
 </main>
@@ -119,12 +126,21 @@
   'use strict';
   var ADMIN_ID = 'Admin';
   var ADMIN_PW = 'mimahenhaoji';
-  var KEY_STATE = 'fuhua_lucky_draw_state_github_local_v4_balanced';
+  var KEY_STATE = 'fuhua_lucky_draw_state_github_local_v4';
   var defaultState = {
+    lang:'zh',
     names:['Kira','Lucia','Gavin'],
-    prizesA:['商场购物卡100元','加油卡100元'],
-    prizesB:['上门收件洗衣服务价值100元','外卖券价值100元','上门家政服务费价值100元'],
+    prizesA:['100 元外卖平台代金券','100 元网购平台抵用金','100 元网约车平台代金券','上门洗衣取送服务平台代金券100 元'],
+    prizesB:['100 元的本地超市购物卡','100 元的手机话费充值','100元的本地加油站储值卡'],
     records:[]
+  };
+  var i18n = {
+    zh:{
+      title:'幸运抽奖',subtitle:'请输入姓名后开始抽奖。每位符合名单的参与者仅可抽奖一次。',statusReady:'待抽取',readyPrize:'准备好了吗？',readyHint:'请输入姓名后点击开始抽奖。',nameLabel:'参与抽奖人姓名',namePlaceholder:'请输入姓名',eligibilityNote:'系统会自动验证抽奖资格；不在名单内或已经抽过奖，将不能继续抽奖。',drawBtn:'开始抽奖',drawingBtn:'抽取中…',drawingStatus:'抽取中',drawingPrize:'好运加载中',drawingHintPrefix:'正在为 ',drawingHintSuffix:' 随机抽取奖项…',rollingHint:'正在滚动显示，不代表最终结果。',wonStatus:'已中奖',congratsSuffix:'，恭喜中奖！',prizesTitle:'奖项',historyTitle:'抽奖记录',copyRecords:'复制中奖名单',adminSettings:'管理员设置',adminLoginTitle:'管理员验证',adminIdLabel:'管理员ID',adminIdPlaceholder:'请输入管理员ID',passwordLabel:'密码',passwordPlaceholder:'请输入密码',adminLoginNote:'管理员验证后，才会显示和编辑参与人员名单、奖项设置和抽奖记录。',loginBtn:'验证并进入后台设置',loginStatus:'请输入管理员ID和密码。',localSettingsTitle:'本机设置说明',localSettingsNote:'GitHub 只提供初始网页。管理员在本机保存的名单、奖项和抽奖记录，只保存在当前手机/电脑浏览器里，不会写回 GitHub，也不会同步到其他设备。',eligibleNamesTitle:'参与抽奖人员名单',namesPlaceholder:'例如：Kira Lucia Gavin\n张三，李四, 王五',namesNote:'支持空格、英文逗号、中文逗号、顿号、分号、换行分隔。参与者看不到这份名单。',nameCount:'当前名单：{n}人',saveNames:'保存名单到本机',backendPrizesTitle:'后台奖项设置',balanceNote:'A / B 只用于后台控制中奖类别。前台不会显示类别。系统会根据已抽结果强制平衡 A / B，使两类中奖次数最多只相差 1 次。',categoryLabel:'类别',catA:'A类',catB:'B类',newPrizeLabel:'新增奖项',newPrizePlaceholder:'输入奖项名称',addBtn:'增加',catATitle:'A类奖项',catBTitle:'B类奖项',savePrizes:'保存奖项设置到本机',winningListTitle:'中奖名单',clearRecords:'清空记录并重置资格',backupTitle:'本机配置备份',backupNote:'换手机或换浏览器时，本机设置不会自动过去。可先导出配置，在另一台设备上粘贴导入。',configPlaceholder:'这里用于导出/导入本机配置',exportConfig:'导出本机配置',importConfig:'导入配置到本机',resetDefaults:'恢复初始名单和奖项',logout:'退出管理员',noPrize:'暂无奖项，请联系管理员设置。',emptyPrize:'暂无奖项',remove:'删除',recordHeader:'姓名\t抽奖时间\t中奖奖项',noRecordsCopy:'目前还没有中奖记录可复制。',copied:'中奖名单已复制。',copyFail:'复制失败，请在管理员区导出后手动复制。',saveFail:'保存失败：浏览器可能禁止了本地存储。',needName:'请先输入参与抽奖人的姓名。',noNames:'管理员尚未设置参与抽奖人员名单。',noPrizes:'管理员尚未设置奖项。',incompletePrizes:'后台奖项设置不完整：A类和B类都至少需要一个奖项，才能保证两类最接近50%。',notEligible:'抱歉，此姓名不在允许抽奖名单中，不能参加本次抽奖。',alreadyDrawn:' 已经抽过奖了，每人只能抽奖一次。',loginOk:'验证成功。现在可以设置本机名单和奖项。',loginBad:'管理员ID或密码不正确。',needAdmin:'请先完成管理员验证。',emptyNamesConfirm:'名单为空，保存后将没有人可以参与抽奖。确定保存吗？',namesSaved:'名单已保存到本机：{n}人。',enterPrize:'请输入新增奖项名称。',addedTo:'已增加到{cat}。请点击“保存奖项设置到本机”正式保存。',deletePrizeConfirm:'确定删除这个奖项吗？',prizesSaved:'奖项设置已保存到本机。',clearConfirm:'确定要清空抽奖记录，并重置所有人的抽奖资格吗？',cleared:'抽奖记录已清空，所有人可以重新抽奖。',exported:'本机配置已导出到文本框，可复制保存。',pasteConfig:'请先粘贴要导入的配置。',importOk:'配置已导入并保存到本机。',importFail:'导入失败：配置文本格式不正确。',resetConfirm:'确定恢复初始名单和奖项？这也会清空抽奖记录。',resetOk:'已恢复初始设置。',loggedOut:'已退出管理员。'
+    },
+    en:{
+      title:'Lucky Draw',subtitle:'Enter your name to start. Each eligible participant can draw only once.',statusReady:'Ready',readyPrize:'Ready?',readyHint:'Enter your name and tap Start.',nameLabel:'Participant Name',namePlaceholder:'Enter your name',eligibilityNote:'The system will verify eligibility automatically. Names not on the list, or names that have already drawn, cannot continue.',drawBtn:'Start Draw',drawingBtn:'Drawing…',drawingStatus:'Drawing',drawingPrize:'Loading luck',drawingHintPrefix:'Drawing a prize for ',drawingHintSuffix:'…',rollingHint:'Rolling display only. This is not the final result.',wonStatus:'Winner',congratsSuffix:', congratulations!',prizesTitle:'Prizes',historyTitle:'Draw Records',copyRecords:'Copy Winner List',adminSettings:'Admin Settings',adminLoginTitle:'Admin Verification',adminIdLabel:'Admin ID',adminIdPlaceholder:'Enter Admin ID',passwordLabel:'Password',passwordPlaceholder:'Enter password',adminLoginNote:'After verification, the admin can edit the participant list, prize settings, and draw records.',loginBtn:'Verify and Enter Admin Panel',loginStatus:'Please enter Admin ID and password.',localSettingsTitle:'Local Settings Notice',localSettingsNote:'GitHub only hosts the initial webpage. Participant lists, prize settings, and draw records saved by the admin are stored only in the current phone/computer browser. They are not written back to GitHub or synced to other devices.',eligibleNamesTitle:'Eligible Participant List',namesPlaceholder:'Example: Kira Lucia Gavin\nJohn, Mary, Alex',namesNote:'Names can be separated by spaces, English commas, Chinese commas, semicolons, or line breaks. Participants cannot see this list.',nameCount:'Current list: {n} people',saveNames:'Save List Locally',backendPrizesTitle:'Backend Prize Settings',balanceNote:'A / B are backend categories only. Participants will not see them. The system force-balances A / B based on previous draw records, so the two category counts differ by at most 1.',categoryLabel:'Category',catA:'Category A',catB:'Category B',newPrizeLabel:'New Prize',newPrizePlaceholder:'Enter prize name',addBtn:'Add',catATitle:'Category A Prizes',catBTitle:'Category B Prizes',savePrizes:'Save Prize Settings Locally',winningListTitle:'Winner List',clearRecords:'Clear Records and Reset Eligibility',backupTitle:'Local Config Backup',backupNote:'Local settings do not automatically move to another phone or browser. Export the config first, then paste and import it on another device.',configPlaceholder:'Use this box to export/import local config',exportConfig:'Export Local Config',importConfig:'Import Config Locally',resetDefaults:'Restore Default List and Prizes',logout:'Log Out Admin',noPrize:'No prizes yet. Please contact the admin.',emptyPrize:'No prize yet',remove:'Remove',recordHeader:'Name\tDraw Time\tPrize',noRecordsCopy:'No winner records to copy yet.',copied:'Winner list copied.',copyFail:'Copy failed. Please export or copy manually from the admin panel.',saveFail:'Save failed. The browser may be blocking local storage.',needName:'Please enter the participant name first.',noNames:'The admin has not set the eligible participant list yet.',noPrizes:'The admin has not set prizes yet.',incompletePrizes:'Prize settings are incomplete. Category A and Category B each need at least one prize to keep the two categories closest to 50/50.',notEligible:'Sorry, this name is not on the eligible list and cannot join this draw.',alreadyDrawn:' has already drawn. Each participant can draw only once.',loginOk:'Verification successful. You can now set the local list and prizes.',loginBad:'Admin ID or password is incorrect.',needAdmin:'Please complete admin verification first.',emptyNamesConfirm:'The list is empty. After saving, nobody can join the draw. Continue?',namesSaved:'List saved locally: {n} people.',enterPrize:'Please enter a new prize name.',addedTo:'Added to {cat}. Tap “Save Prize Settings Locally” to save it permanently.',deletePrizeConfirm:'Remove this prize?',prizesSaved:'Prize settings saved locally.',clearConfirm:'Clear all draw records and reset everyone’s eligibility?',cleared:'Draw records have been cleared. Everyone can draw again.',exported:'Local config has been exported to the text box. You can copy and save it.',pasteConfig:'Please paste the config to import first.',importOk:'Config imported and saved locally.',importFail:'Import failed: invalid config format.',resetConfirm:'Restore the default list and prizes? This will also clear draw records.',resetOk:'Default settings restored.',loggedOut:'Admin logged out.'
+    }
   };
   var state = loadState();
   var drawing = false;
@@ -132,12 +148,15 @@
 
   function el(id){ return document.getElementById(id); }
   function clone(o){ return JSON.parse(JSON.stringify(o)); }
+  function t(k){ return (i18n[state.lang||'zh'] && i18n[state.lang||'zh'][k]) || i18n.zh[k] || k; }
+  function fmt(k, obj){ var s=t(k); for(var p in obj){ s=s.replace('{'+p+'}', obj[p]); } return s; }
   function loadState(){
     try{
       var s = window.localStorage.getItem(KEY_STATE);
       if(!s) return clone(defaultState);
       var obj = JSON.parse(s);
       return {
+        lang:obj.lang==='en'?'en':'zh',
         names:Array.isArray(obj.names)?obj.names:clone(defaultState.names),
         prizesA:Array.isArray(obj.prizesA)&&obj.prizesA.length?obj.prizesA:clone(defaultState.prizesA),
         prizesB:Array.isArray(obj.prizesB)&&obj.prizesB.length?obj.prizesB:clone(defaultState.prizesB),
@@ -145,7 +164,7 @@
       };
     }catch(e){ return clone(defaultState); }
   }
-  function saveState(){ try{ window.localStorage.setItem(KEY_STATE, JSON.stringify(state)); }catch(e){ alert('保存失败：浏览器可能禁止了本地存储。'); } }
+  function saveState(){ try{ window.localStorage.setItem(KEY_STATE, JSON.stringify(state)); }catch(e){ alert(t('saveFail')); } }
   function norm(s){ return String(s || '').trim().replace(/\s+/g,' ').toLowerCase(); }
   function parseNames(text){
     var arr = String(text || '').split(/[\s,，、;；]+/g), out=[], seen={};
@@ -155,46 +174,18 @@
   function canonicalName(input){ var k=norm(input); for(var i=0;i<state.names.length;i++){ if(norm(state.names[i])===k) return state.names[i]; } return null; }
   function hasDrawn(name){ var k=norm(name); for(var i=0;i<state.records.length;i++){ if(norm(state.records[i].name)===k) return true; } return false; }
   function rand(n){ if(n<=0) return 0; if(window.crypto && window.crypto.getRandomValues){ var a=new Uint32Array(1); window.crypto.getRandomValues(a); return a[0]%n; } return Math.floor(Math.random()*n); }
-  function getRecordCategory(record){
-    if(record && (record.category==='A' || record.category==='B')) return record.category;
-    var prize = record ? record.prize : '';
-    for(var i=0;i<state.prizesA.length;i++){ if(state.prizesA[i]===prize) return 'A'; }
-    for(var j=0;j<state.prizesB.length;j++){ if(state.prizesB[j]===prize) return 'B'; }
-    return '';
-  }
-  function categoryCounts(){
-    var a=0,b=0;
-    for(var i=0;i<state.records.length;i++){
-      var c=getRecordCategory(state.records[i]);
-      if(c==='A') a++; else if(c==='B') b++;
-    }
-    return {A:a,B:b};
-  }
-  function nextBalancedCategory(){
-    var c=categoryCounts();
-    if(c.A>c.B) return 'B';
-    if(c.B>c.A) return 'A';
-    return rand(2)===0 ? 'A' : 'B';
-  }
-  function pickPrizeFromCategory(cat){
-    var list = cat==='A' ? state.prizesA : state.prizesB;
-    return list[rand(list.length)];
-  }
-  function pickPrize(){
-    var cat = rand(2)===0 ? 'A' : 'B';
-    return pickPrizeFromCategory(cat);
-  }
-  function pickBalancedPrize(){
-    var cat = nextBalancedCategory();
-    return {category:cat, prize:pickPrizeFromCategory(cat)};
-  }
+  function countCats(){ var a=0,b=0; for(var i=0;i<state.records.length;i++){ if(state.records[i].cat==='A') a++; else if(state.records[i].cat==='B') b++; } return {A:a,B:b}; }
+  function pickCategory(){ var c=countCats(); if(c.A>c.B) return 'B'; if(c.B>c.A) return 'A'; return rand(2)===0?'A':'B'; }
+  function randomPrizeFrom(cat){ var list=cat==='A'?state.prizesA:state.prizesB; return list[rand(list.length)]; }
+  function pickPreviewPrize(){ var list = rand(2)===0 ? state.prizesA : state.prizesB; if(!list || !list.length) list = (state.prizesA.length ? state.prizesA : state.prizesB); return list[rand(list.length)]; }
   function show(status, prize, hint, ok){ el('status').textContent=status; el('status').className='status'+(ok?' ok':''); el('prize').textContent=prize; el('hint').textContent=hint; }
+  function resetMainDisplay(){ show(t('statusReady'),t('readyPrize'),t('readyHint'),false); el('drawBtn').textContent=t('drawBtn'); }
   function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function renderPublicPrizes(){
     var all = state.prizesA.concat(state.prizesB);
     var html = [];
     for(var i=0;i<all.length;i++) html.push('<div class="pill">'+escapeHtml(all[i])+'</div>');
-    el('publicPrizeList').innerHTML = html.join('') || '<div class="note">暂无奖项，请联系管理员设置。</div>';
+    el('publicPrizeList').innerHTML = html.join('') || '<div class="note">'+escapeHtml(t('noPrize'))+'</div>';
   }
   function renderHistory(){
     if(!state.records.length){ el('historyBox').className='box'; el('historyList').innerHTML=''; return; }
@@ -203,45 +194,42 @@
     for(var i=0;i<state.records.length;i++) html.push((i+1)+'. '+escapeHtml(state.records[i].name)+'｜'+escapeHtml(state.records[i].time)+'｜'+escapeHtml(state.records[i].prize));
     el('historyList').innerHTML=html.join('<br>');
   }
-  function renderAdminPrizes(){
-    renderOnePrizeList('adminPrizeA', state.prizesA, 'A');
-    renderOnePrizeList('adminPrizeB', state.prizesB, 'B');
-  }
+  function renderAdminPrizes(){ renderOnePrizeList('adminPrizeA', state.prizesA, 'A'); renderOnePrizeList('adminPrizeB', state.prizesB, 'B'); }
   function renderOnePrizeList(id, list, cat){
     var box=el(id); box.innerHTML='';
-    if(!list.length){ box.innerHTML='<div class="note">暂无奖项</div>'; return; }
+    if(!list.length){ box.innerHTML='<div class="note">'+escapeHtml(t('emptyPrize'))+'</div>'; return; }
     for(var i=0;i<list.length;i++){
       var item=document.createElement('div'); item.className='listItem';
       var span=document.createElement('span'); span.textContent=(i+1)+'. '+list[i]; item.appendChild(span);
-      var btn=document.createElement('button'); btn.type='button'; btn.className='removeBtn'; btn.textContent='删除'; btn.setAttribute('data-cat',cat); btn.setAttribute('data-index',i); item.appendChild(btn);
+      var btn=document.createElement('button'); btn.type='button'; btn.className='removeBtn'; btn.textContent=t('remove'); btn.setAttribute('data-cat',cat); btn.setAttribute('data-index',i); item.appendChild(btn);
       box.appendChild(item);
     }
   }
-  function updateNameCount(){ el('nameCount').textContent='当前名单：'+parseNames(el('nameList').value).length+'人'; }
+  function updateNameCount(){ el('nameCount').textContent=fmt('nameCount',{n:parseNames(el('nameList').value).length}); }
   function recordsText(){
-    var lines=['姓名\t抽奖时间\t中奖奖项'];
+    var lines=[t('recordHeader')];
     for(var i=0;i<state.records.length;i++) lines.push(state.records[i].name+'\t'+state.records[i].time+'\t'+state.records[i].prize);
     return lines.join('\n');
   }
   function copyText(text){
-    if(!text || text.split('\n').length<=1){ alert('目前还没有中奖记录可复制。'); return; }
-    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ alert('中奖名单已复制。'); }, fallbackCopy); }
+    if(!text || text.split('\n').length<=1){ alert(t('noRecordsCopy')); return; }
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ alert(t('copied')); }, fallbackCopy); }
     else fallbackCopy();
     function fallbackCopy(){
       var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.focus(); ta.select();
-      try{ document.execCommand('copy'); alert('中奖名单已复制。'); }catch(e){ alert('复制失败，请在管理员区导出后手动复制。'); }
+      try{ document.execCommand('copy'); alert(t('copied')); }catch(e){ alert(t('copyFail')); }
       document.body.removeChild(ta);
     }
   }
   function validatePlayer(){
     var raw=el('playerName').value;
-    if(!raw.trim()){ alert('请先输入参与抽奖人的姓名。'); el('playerName').focus(); return null; }
-    if(!state.names.length){ alert('管理员尚未设置参与抽奖人员名单。'); return null; }
-    if(!state.prizesA.length && !state.prizesB.length){ alert('管理员尚未设置奖项。'); return null; }
-    if(!state.prizesA.length || !state.prizesB.length){ alert('后台奖项设置不完整：A类和B类都至少需要一个奖项，才能保证两类各50%。'); return null; }
+    if(!raw.trim()){ alert(t('needName')); el('playerName').focus(); return null; }
+    if(!state.names.length){ alert(t('noNames')); return null; }
+    if(!state.prizesA.length && !state.prizesB.length){ alert(t('noPrizes')); return null; }
+    if(!state.prizesA.length || !state.prizesB.length){ alert(t('incompletePrizes')); return null; }
     var name=canonicalName(raw);
-    if(!name){ alert('抱歉，此姓名不在允许抽奖名单中，不能参加本次抽奖。'); el('playerName').focus(); return null; }
-    if(hasDrawn(name)){ alert(name+' 已经抽过奖了，每人只能抽奖一次。'); return null; }
+    if(!name){ alert(t('notEligible')); el('playerName').focus(); return null; }
+    if(hasDrawn(name)){ alert(name+t('alreadyDrawn')); return null; }
     return name;
   }
   function confetti(){
@@ -251,37 +239,49 @@
   }
   function doDraw(){
     if(drawing) return; var name=validatePlayer(); if(!name) return;
-    drawing=true; el('drawBtn').disabled=true; el('playerName').disabled=true; el('drawBtn').textContent='抽取中…'; el('ball').className='ball spin';
-    show('抽取中','好运加载中','正在为 '+name+' 随机抽取奖项…',false);
-    var count=0, timer=setInterval(function(){ show('抽取中',pickPrize(),'正在滚动显示，不代表最终结果。',false); count++; if(count>=12) clearInterval(timer); },90);
+    drawing=true; el('drawBtn').disabled=true; el('playerName').disabled=true; el('drawBtn').textContent=t('drawingBtn'); el('ball').className='ball spin';
+    show(t('drawingStatus'),t('drawingPrize'),t('drawingHintPrefix')+name+t('drawingHintSuffix'),false);
+    var count=0, timer=setInterval(function(){ show(t('drawingStatus'),pickPreviewPrize(),t('rollingHint'),false); count++; if(count>=12) clearInterval(timer); },90);
     setTimeout(function(){
-      var result=pickBalancedPrize(); var time=new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
-      state.records.push({name:name,time:time,prize:result.prize,category:result.category}); saveState(); renderHistory(); el('ball').className='ball'; show('已中奖',result.prize,name+'，恭喜中奖！',true); confetti();
-      el('drawBtn').textContent='开始抽奖'; el('drawBtn').disabled=false; el('playerName').disabled=false; el('playerName').value=''; drawing=false;
+      var cat=pickCategory(); var result=randomPrizeFrom(cat); var time=new Date().toLocaleString(state.lang==='en'?'en-US':'zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      state.records.push({name:name,time:time,prize:result,cat:cat}); saveState(); renderHistory(); el('ball').className='ball'; show(t('wonStatus'),result,name+t('congratsSuffix'),true); confetti();
+      el('drawBtn').textContent=t('drawBtn'); el('drawBtn').disabled=false; el('playerName').disabled=false; el('playerName').value=''; drawing=false;
     },1450);
   }
   function login(){
     if(el('adminId').value.trim()===ADMIN_ID && el('adminPw').value===ADMIN_PW){
-      verified=true; el('loginArea').style.display='none'; el('adminArea').className='show'; el('nameList').value=state.names.join('\n'); updateNameCount(); renderAdminPrizes(); alert('验证成功。现在可以设置本机名单和奖项。'); setTimeout(function(){ el('nameList').focus(); },80);
-    }else{ el('loginStatus').innerHTML='<span class="badText">管理员ID或密码不正确。</span>'; el('adminPw').value=''; alert('管理员ID或密码不正确。'); }
+      verified=true; el('loginArea').style.display='none'; el('adminArea').className='show'; el('nameList').value=state.names.join('\n'); updateNameCount(); renderAdminPrizes(); alert(t('loginOk')); setTimeout(function(){ el('nameList').focus(); },80);
+    }else{ el('loginStatus').innerHTML='<span class="badText">'+escapeHtml(t('loginBad'))+'</span>'; el('adminPw').value=''; alert(t('loginBad')); }
   }
-  function saveNames(){ if(!verified){alert('请先完成管理员验证。');return;} var arr=parseNames(el('nameList').value); if(arr.length===0 && !confirm('名单为空，保存后将没有人可以参与抽奖。确定保存吗？')) return; state.names=arr; saveState(); updateNameCount(); alert('名单已保存到本机：'+state.names.length+'人。'); }
+  function saveNames(){ if(!verified){alert(t('needAdmin'));return;} var arr=parseNames(el('nameList').value); if(arr.length===0 && !confirm(t('emptyNamesConfirm'))) return; state.names=arr; saveState(); updateNameCount(); alert(fmt('namesSaved',{n:state.names.length})); }
   function addPrize(){
-    if(!verified){alert('请先完成管理员验证。');return;} var name=el('newPrizeName').value.trim(); if(!name){alert('请输入新增奖项名称。');return;} var cat=el('newPrizeCategory').value;
-    var list=cat==='A'?state.prizesA:state.prizesB; list.push(name); el('newPrizeName').value=''; renderAdminPrizes(); renderPublicPrizes(); alert('已增加到'+cat+'类。请点击“保存奖项设置到本机”正式保存。');
+    if(!verified){alert(t('needAdmin'));return;} var name=el('newPrizeName').value.trim(); if(!name){alert(t('enterPrize'));return;} var cat=el('newPrizeCategory').value;
+    var list=cat==='A'?state.prizesA:state.prizesB; list.push(name); el('newPrizeName').value=''; renderAdminPrizes(); renderPublicPrizes(); alert(fmt('addedTo',{cat:cat}));
   }
-  function removePrize(cat, index){
-    var list=cat==='A'?state.prizesA:state.prizesB; if(index<0 || index>=list.length) return; if(!confirm('确定删除这个奖项吗？')) return; list.splice(index,1); renderAdminPrizes(); renderPublicPrizes();
-  }
-  function savePrizes(){ if(!verified){alert('请先完成管理员验证。');return;} if(!state.prizesA.length || !state.prizesB.length){ alert('A类和B类都至少需要一个奖项，否则无法保证两类各50%。'); return; } saveState(); renderPublicPrizes(); alert('奖项设置已保存到本机。'); }
-  function clearRecords(){ if(!verified){alert('请先完成管理员验证。');return;} if(!confirm('确定要清空抽奖记录，并重置所有人的抽奖资格吗？')) return; state.records=[]; saveState(); renderHistory(); show('待抽取','准备好了吗？','请输入姓名后点击开始抽奖。',false); alert('抽奖记录已清空，所有人可以重新抽奖。'); }
-  function exportConfig(){ el('configText').value=JSON.stringify(state,null,2); el('configText').focus(); el('configText').select(); alert('本机配置已导出到文本框，可复制保存。'); }
+  function removePrize(cat, index){ var list=cat==='A'?state.prizesA:state.prizesB; if(index<0 || index>=list.length) return; if(!confirm(t('deletePrizeConfirm'))) return; list.splice(index,1); renderAdminPrizes(); renderPublicPrizes(); }
+  function savePrizes(){ if(!verified){alert(t('needAdmin'));return;} if(!state.prizesA.length || !state.prizesB.length){ alert(t('incompletePrizes')); return; } saveState(); renderPublicPrizes(); alert(t('prizesSaved')); }
+  function clearRecords(){ if(!verified){alert(t('needAdmin'));return;} if(!confirm(t('clearConfirm'))) return; state.records=[]; saveState(); renderHistory(); resetMainDisplay(); alert(t('cleared')); }
+  function exportConfig(){ el('configText').value=JSON.stringify(state,null,2); el('configText').focus(); el('configText').select(); alert(t('exported')); }
   function importConfig(){
-    if(!verified){alert('请先完成管理员验证。');return;} var txt=el('configText').value.trim(); if(!txt){alert('请先粘贴要导入的配置。');return;}
-    try{ var obj=JSON.parse(txt); if(!Array.isArray(obj.names)||!Array.isArray(obj.prizesA)||!Array.isArray(obj.prizesB)||!Array.isArray(obj.records)) throw new Error('bad'); state={names:obj.names,prizesA:obj.prizesA,prizesB:obj.prizesB,records:obj.records}; saveState(); el('nameList').value=state.names.join('\n'); updateNameCount(); renderAdminPrizes(); renderPublicPrizes(); renderHistory(); alert('配置已导入并保存到本机。'); }catch(e){ alert('导入失败：配置文本格式不正确。'); }
+    if(!verified){alert(t('needAdmin'));return;} var txt=el('configText').value.trim(); if(!txt){alert(t('pasteConfig'));return;}
+    try{ var obj=JSON.parse(txt); if(!Array.isArray(obj.names)||!Array.isArray(obj.prizesA)||!Array.isArray(obj.prizesB)||!Array.isArray(obj.records)) throw new Error('bad'); state={lang:(obj.lang==='en'?'en':'zh'),names:obj.names,prizesA:obj.prizesA,prizesB:obj.prizesB,records:obj.records}; saveState(); el('nameList').value=state.names.join('\n'); applyLang(); updateNameCount(); renderAdminPrizes(); renderPublicPrizes(); renderHistory(); alert(t('importOk')); }catch(e){ alert(t('importFail')); }
   }
-  function resetDefaults(){ if(!verified){alert('请先完成管理员验证。');return;} if(!confirm('确定恢复初始名单和奖项？这也会清空抽奖记录。')) return; state=clone(defaultState); saveState(); el('nameList').value=state.names.join('\n'); updateNameCount(); renderAdminPrizes(); renderPublicPrizes(); renderHistory(); alert('已恢复初始设置。'); }
-  function logout(){ verified=false; el('loginArea').style.display='block'; el('adminArea').className=''; el('adminPw').value=''; el('loginStatus').textContent='已退出管理员。'; }
+  function resetDefaults(){ if(!verified){alert(t('needAdmin'));return;} if(!confirm(t('resetConfirm'))) return; var keepLang=state.lang; state=clone(defaultState); state.lang=keepLang; saveState(); el('nameList').value=state.names.join('\n'); applyLang(); updateNameCount(); renderAdminPrizes(); renderPublicPrizes(); renderHistory(); alert(t('resetOk')); }
+  function logout(){ verified=false; el('loginArea').style.display='block'; el('adminArea').className=''; el('adminPw').value=''; el('loginStatus').textContent=t('loggedOut'); }
+  function applyLang(){
+    document.documentElement.lang = state.lang==='en'?'en':'zh-CN';
+    document.title = t('title');
+    var nodes=document.querySelectorAll('[data-i18n]');
+    for(var i=0;i<nodes.length;i++){ nodes[i].textContent=t(nodes[i].getAttribute('data-i18n')); }
+    var ps=document.querySelectorAll('[data-i18n-placeholder]');
+    for(var j=0;j<ps.length;j++){ ps[j].setAttribute('placeholder',t(ps[j].getAttribute('data-i18n-placeholder'))); }
+    el('langZh').className='langBtn'+(state.lang==='zh'?' active':'');
+    el('langEn').className='langBtn'+(state.lang==='en'?' active':'');
+    if(!drawing && el('status').className.indexOf('ok')<0) resetMainDisplay();
+    el('loginStatus').textContent=t('loginStatus');
+    updateNameCount(); renderPublicPrizes(); renderHistory(); if(verified) renderAdminPrizes();
+  }
+  function setLang(lang){ state.lang=lang; saveState(); applyLang(); }
 
   el('drawBtn').addEventListener('click',doDraw,false);
   el('playerName').addEventListener('keydown',function(e){ if(e.key==='Enter') doDraw(); },false);
@@ -302,7 +302,9 @@
   el('importConfig').addEventListener('click',importConfig,false);
   el('resetDefaults').addEventListener('click',resetDefaults,false);
   el('logoutBtn').addEventListener('click',logout,false);
-  renderPublicPrizes(); renderHistory();
+  el('langZh').addEventListener('click',function(){ setLang('zh'); },false);
+  el('langEn').addEventListener('click',function(){ setLang('en'); },false);
+  applyLang();
 })();
 </script>
 </body>
